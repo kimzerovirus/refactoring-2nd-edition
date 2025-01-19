@@ -1,4 +1,4 @@
-package me.kzv.refactoring.chapter01.step01
+package me.kzv.refactoring.chapter01.refactor
 
 import me.kzv.refactoring.chapter01.*
 import java.text.NumberFormat
@@ -19,8 +19,7 @@ import java.util.*
  * 4. 변수 인라인하기로 volumeCredits 변수 제거
  */
 fun statement(invoice: Invoice, plays: Map<String, Play>): String {
-    var result = "청구 내역 (고객명: ${invoice.customer})\n"
-
+    //=== 중첩 함수 시작 ===//
     fun usd(aNumber: Int): String = NumberFormat.getCurrencyInstance(Locale.US).format(aNumber / 100.0)
 
     fun playFor(
@@ -50,10 +49,10 @@ fun statement(invoice: Invoice, plays: Map<String, Play>): String {
         return result
     }
 
-    fun volumeCreditsFor(aPerformance: Performance) : Int {
+    fun volumeCreditsFor(aPerformance: Performance): Int {
         var result = 0
         result += Math.max(aPerformance.audience - 30, 0)
-        if("comedy" == playFor(aPerformance).type) {
+        if ("comedy" == playFor(aPerformance).type) {
             result += aPerformance.audience / 5
         }
         return result
@@ -74,12 +73,13 @@ fun statement(invoice: Invoice, plays: Map<String, Play>): String {
         }
         return volumeCredits
     }
+    //=== 중첩 함수 끝 ===//
 
+    var result = "청구 내역 (고객명: ${invoice.customer})\n"
     for (perf in invoice.performances) {
         // 청구 내역을 출력한다.
         result += " ${playFor(perf).name}: ${usd(amountFor(perf))} (${perf.audience}석)\n"
     }
-
     result += "총액: ${usd(totalAmount())}\n"
     result += "적립 포인트: ${totalVolumeCredits()}점\n"
     return result
