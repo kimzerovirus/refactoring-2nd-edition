@@ -2,6 +2,8 @@ package me.kzv.refactoring.chapter01.origin
 
 import me.kzv.refactoring.chapter01.Invoice
 import me.kzv.refactoring.chapter01.Play
+import me.kzv.refactoring.chapter01.invoices
+import me.kzv.refactoring.chapter01.plays
 import java.text.NumberFormat
 import java.util.*
 
@@ -48,4 +50,11 @@ fun statement(invoice: Invoice, plays: Map<String, Play>): String {
     result += "총액: ${totalAmount / 100}\n"
     result += "적립 포인트: ${volumeCredits}점\n"
     return result
+}
+
+fun main() {
+    for (invoice in invoices) {
+        val result = statement(invoice, plays)
+        println(result)
+    }
 }
