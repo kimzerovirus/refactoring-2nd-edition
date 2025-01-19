@@ -11,7 +11,6 @@ import java.util.*
  */
 fun statement(invoice: Invoice, plays: Map<String, Play>): String {
     var totalAmount = 0
-    var volumeCredits = 0
     var result = "청구 내역 (고객명: ${invoice.customer})\n"
 
     fun format(aNumber: Int): String = NumberFormat.getCurrencyInstance(Locale.US).format(aNumber / 100.0)
@@ -53,16 +52,22 @@ fun statement(invoice: Invoice, plays: Map<String, Play>): String {
         return result
     }
 
-    for (perf in invoice.performances) {
-        volumeCredits += volumeCreditsFor(perf)
+    fun totalVolumeCredits(): Int {
+        var volumeCredits = 0
+        for (perf in invoice.performances) {
+            volumeCredits += volumeCreditsFor(perf)
+        }
+        return volumeCredits
+    }
 
+    for (perf in invoice.performances) {
         // 청구 내역을 출력한다.
         result += " ${playFor(perf).name}: ${format(amountFor(perf))} (${perf.audience}석)\n"
         totalAmount += amountFor(perf)
     }
 
     result += "총액: ${format(totalAmount)}\n"
-    result += "적립 포인트: ${volumeCredits}점\n"
+    result += "적립 포인트: ${totalVolumeCredits()}점\n"
     return result
 }
 
