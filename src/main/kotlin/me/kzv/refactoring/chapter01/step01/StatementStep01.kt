@@ -14,7 +14,7 @@ fun statement(invoice: Invoice, plays: Map<String, Play>): String {
     var volumeCredits = 0
     var result = "청구 내역 (고객명: ${invoice.customer})\n"
 
-    fun format(aNumber: Double): String = NumberFormat.getCurrencyInstance(Locale.US).format(aNumber)
+    fun format(aNumber: Int): String = NumberFormat.getCurrencyInstance(Locale.US).format(aNumber / 100.0)
 
     fun playFor(
         aPerformance: Performance // 명확한 이름으로 변경, 코드 스타일 중 매개변수의 역할이 뚜렷하지 않을 때는 부정관사를 붙여주는 방법도 있다. - 마땅한 이름을 짓기 애매해 고민을 오랫동안 할바에는 나쁘지 않은듯
@@ -57,11 +57,11 @@ fun statement(invoice: Invoice, plays: Map<String, Play>): String {
         volumeCredits += volumeCreditsFor(perf)
 
         // 청구 내역을 출력한다.
-        result += " ${playFor(perf).name}: ${format(amountFor(perf) / 100.0)} (${perf.audience}석)\n"
+        result += " ${playFor(perf).name}: ${format(amountFor(perf))} (${perf.audience}석)\n"
         totalAmount += amountFor(perf)
     }
 
-    result += "총액: ${format(totalAmount / 100.0)}\n"
+    result += "총액: ${format(totalAmount)}\n"
     result += "적립 포인트: ${volumeCredits}점\n"
     return result
 }
