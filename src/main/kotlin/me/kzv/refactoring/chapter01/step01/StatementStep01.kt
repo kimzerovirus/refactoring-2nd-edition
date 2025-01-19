@@ -19,7 +19,6 @@ import java.util.*
  * 4. 변수 인라인하기로 volumeCredits 변수 제거
  */
 fun statement(invoice: Invoice, plays: Map<String, Play>): String {
-    var totalAmount = 0
     var result = "청구 내역 (고객명: ${invoice.customer})\n"
 
     fun format(aNumber: Int): String = NumberFormat.getCurrencyInstance(Locale.US).format(aNumber / 100.0)
@@ -60,6 +59,14 @@ fun statement(invoice: Invoice, plays: Map<String, Play>): String {
         return result
     }
 
+    fun totalAmount(): Int {
+        var result = 0
+        for (perf in invoice.performances) {
+            result += amountFor(perf)
+        }
+        return result
+    }
+
     fun totalVolumeCredits(): Int {
         var volumeCredits = 0
         for (perf in invoice.performances) {
@@ -71,10 +78,9 @@ fun statement(invoice: Invoice, plays: Map<String, Play>): String {
     for (perf in invoice.performances) {
         // 청구 내역을 출력한다.
         result += " ${playFor(perf).name}: ${format(amountFor(perf))} (${perf.audience}석)\n"
-        totalAmount += amountFor(perf)
     }
 
-    result += "총액: ${format(totalAmount)}\n"
+    result += "총액: ${format(totalAmount())}\n"
     result += "적립 포인트: ${totalVolumeCredits()}점\n"
     return result
 }
