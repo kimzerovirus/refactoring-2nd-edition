@@ -21,7 +21,7 @@ import java.util.*
 fun statement(invoice: Invoice, plays: Map<String, Play>): String {
     var result = "청구 내역 (고객명: ${invoice.customer})\n"
 
-    fun format(aNumber: Int): String = NumberFormat.getCurrencyInstance(Locale.US).format(aNumber / 100.0)
+    fun usd(aNumber: Int): String = NumberFormat.getCurrencyInstance(Locale.US).format(aNumber / 100.0)
 
     fun playFor(
         aPerformance: Performance // 명확한 이름으로 변경, 코드 스타일 중 매개변수의 역할이 뚜렷하지 않을 때는 부정관사를 붙여주는 방법도 있다. - 마땅한 이름을 짓기 애매해 고민을 오랫동안 할바에는 나쁘지 않은듯
@@ -77,10 +77,10 @@ fun statement(invoice: Invoice, plays: Map<String, Play>): String {
 
     for (perf in invoice.performances) {
         // 청구 내역을 출력한다.
-        result += " ${playFor(perf).name}: ${format(amountFor(perf))} (${perf.audience}석)\n"
+        result += " ${playFor(perf).name}: ${usd(amountFor(perf))} (${perf.audience}석)\n"
     }
 
-    result += "총액: ${format(totalAmount())}\n"
+    result += "총액: ${usd(totalAmount())}\n"
     result += "적립 포인트: ${totalVolumeCredits()}점\n"
     return result
 }
