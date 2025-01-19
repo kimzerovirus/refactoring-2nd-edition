@@ -43,11 +43,11 @@ fun statement(invoice: Invoice, plays: Map<String, Play>): String {
         if("comedy" == play.type) volumeCredits += perf.audience / 5 // 원본 js 코드는 Math.floor 처리
 
         // 청구 내역을 출력한다.
-        result += " ${play.name}: ${format.format(thisAmount / 100)} (${perf.audience}석)\n"
+        result += " ${play.name}: ${format.format(thisAmount / 100.0)} (${perf.audience}석)\n"
         totalAmount += thisAmount
     }
 
-    result += "총액: ${totalAmount / 100}\n"
+    result += "총액: ${format.format(totalAmount / 100.0)}\n"
     result += "적립 포인트: ${volumeCredits}점\n"
     return result
 }
