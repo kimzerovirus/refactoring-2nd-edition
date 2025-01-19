@@ -13,8 +13,36 @@ fun statement(invoice: Invoice, plays: Map<String, Play>): String {
     var result = "청구 내역 (고객명: ${invoice.customer})\n"
     val format = NumberFormat.getCurrencyInstance(Locale.US)
 
+    fun playFor(
+        aPerformance: Performance // 명확한 이름으로 변경, 코드 스타일 중 매개변수의 역할이 뚜렷하지 않을 때는 부정관사를 붙여주는 방법도 있다. - 마땅한 이름을 짓기 애매해 고민을 오랫동안 할바에는 나쁘지 않은듯
+    ) = plays[aPerformance.playID]!!
+
+    // 서적에서는 중첩 함수로 변수를 줄일 수 있다고 재시함 하지만 여기서 play, perf는 반복문을 통해 동적으로 받으므로 매개변수로 받아 준다.
+    fun amountFor(play: Play, aPerformance: Performance): Int {
+        var result = 0
+        when (play.type) {
+            "tragedy" -> {
+                result = 40000
+                if (aPerformance.audience > 30) {
+                    result += 1000 * (aPerformance.audience - 30)
+                }
+            }
+
+            "comedy" -> {
+                result = 30000
+                if (aPerformance.audience > 20) {
+                    result += 10000 + 500 * (aPerformance.audience - 20)
+                }
+                result += 300 * aPerformance.audience
+            }
+
+            else -> throw IllegalArgumentException("알 수 없는 장르: ${play.type}")
+        }
+        return result
+    }
+
     for (perf in invoice.performances) {
-        val play = plays[perf.playID]!!
+        val play = playFor(perf)
         val thisAmount = amountFor(play, perf)
 
         // 포인트를 적립한다.
@@ -29,33 +57,6 @@ fun statement(invoice: Invoice, plays: Map<String, Play>): String {
 
     result += "총액: ${format.format(totalAmount / 100.0)}\n"
     result += "적립 포인트: ${volumeCredits}점\n"
-    return result
-}
-
-// 서적에서는 중첩 함수로 변수를 줄일 수 있다고 재시함 하지만 여기서 play, perf는 반복문을 통해 동적으로 받으므로 매개변수로 받아 준다.
-private fun amountFor(
-    play: Play,
-    aPerformance: Performance // 명확한 이름으로 변경, 코드 스타일 중 매개변수의 역할이 뚜렷하지 않을 때는 부정관사를 붙여주는 방법도 있다. - 마땅한 이름을 짓기 애매해 고민을 오랫동안 할바에는 나쁘지 않은듯
-): Int {
-    var result = 0
-    when (play.type) {
-        "tragedy" -> {
-            result = 40000
-            if (aPerformance.audience > 30) {
-                result += 1000 * (aPerformance.audience - 30)
-            }
-        }
-
-        "comedy" -> {
-            result = 30000
-            if (aPerformance.audience > 20) {
-                result += 10000 + 500 * (aPerformance.audience - 20)
-            }
-            result += 300 * aPerformance.audience
-        }
-
-        else -> throw IllegalArgumentException("알 수 없는 장르: ${play.type}")
-    }
     return result
 }
 
