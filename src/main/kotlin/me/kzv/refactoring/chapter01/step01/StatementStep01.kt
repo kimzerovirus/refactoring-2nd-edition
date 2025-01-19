@@ -6,12 +6,15 @@ import java.util.*
 
 /**
  * step01 - 1.4 statement 함수 쪼개기
+ *
+ * - 저자는 임시 변수가 자신이 속한 루틴에서만 의미가 있어서 루틴이 길고 복잡해지기 쉬워 나중에 문제를 일으킬 수 있으므로 제거하는게 좋다고 제시하였다. // 동일한 값을 얻기 위해 반복적으로 함수를 실행하는 경우가 있는데 임시 변수를 제거하는게 꼭 좋은거 같지는 않아 보인다.
  */
 fun statement(invoice: Invoice, plays: Map<String, Play>): String {
     var totalAmount = 0
     var volumeCredits = 0
     var result = "청구 내역 (고객명: ${invoice.customer})\n"
-    val format = NumberFormat.getCurrencyInstance(Locale.US)
+
+    fun format(aNumber: Double): String = NumberFormat.getCurrencyInstance(Locale.US).format(aNumber)
 
     fun playFor(
         aPerformance: Performance // 명확한 이름으로 변경, 코드 스타일 중 매개변수의 역할이 뚜렷하지 않을 때는 부정관사를 붙여주는 방법도 있다. - 마땅한 이름을 짓기 애매해 고민을 오랫동안 할바에는 나쁘지 않은듯
@@ -54,11 +57,11 @@ fun statement(invoice: Invoice, plays: Map<String, Play>): String {
         volumeCredits += volumeCreditsFor(perf)
 
         // 청구 내역을 출력한다.
-        result += " ${playFor(perf).name}: ${format.format(amountFor(perf) / 100.0)} (${perf.audience}석)\n"
+        result += " ${playFor(perf).name}: ${format(amountFor(perf) / 100.0)} (${perf.audience}석)\n"
         totalAmount += amountFor(perf)
     }
 
-    result += "총액: ${format.format(totalAmount / 100.0)}\n"
+    result += "총액: ${format(totalAmount / 100.0)}\n"
     result += "적립 포인트: ${volumeCredits}점\n"
     return result
 }
