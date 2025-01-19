@@ -2,6 +2,8 @@ package me.kzv.refactoring.chapter01.origin
 
 import me.kzv.refactoring.Error
 import me.kzv.refactoring.chapter01.*
+import java.text.NumberFormat
+import java.util.*
 
 /**
  * 원본 예제 그대로 kotlin으로 작성해보기
@@ -10,7 +12,7 @@ fun statement(invoice: Invoice, plays: Map<String, Play>): String {
     var totalAmount = 0
     var volumeCredits = 0
     var result = "청구 내역 (고객명: ${invoice.customer})\n"
-    val format = "" // number format
+    val format = NumberFormat.getCurrencyInstance(Locale.US)
 
     for (perf in invoice.performances) {
         val play = plays[perf.playID]
@@ -39,7 +41,7 @@ fun statement(invoice: Invoice, plays: Map<String, Play>): String {
         if("comedy" == play.type) volumeCredits += perf.audience / 5 // 원본 js 코드는 Math.floor 처리
 
         // 청구 내역을 출력한다.
-        result += " ${play.name}: ${thisAmount / 100} (${perf.audience}석)\n"
+        result += " ${play.name}: ${format.format(thisAmount / 100)} (${perf.audience}석)\n"
         totalAmount += thisAmount
     }
 
