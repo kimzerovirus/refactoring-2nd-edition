@@ -1,7 +1,7 @@
 package me.kzv.refactoring.chapter01.origin
 
-import me.kzv.refactoring.Error
-import me.kzv.refactoring.chapter01.*
+import me.kzv.refactoring.chapter01.Invoice
+import me.kzv.refactoring.chapter01.Play
 import java.text.NumberFormat
 import java.util.*
 
@@ -32,7 +32,7 @@ fun statement(invoice: Invoice, plays: Map<String, Play>): String {
                 }
                 thisAmount += 300 * perf.audience
             }
-            else -> throw Error("알 수 없는 장르: ${play?.type}")
+            else -> throw IllegalArgumentException("알 수 없는 장르: ${play?.type}")
         }
 
         // 포인트를 적립한다.
