@@ -1,5 +1,6 @@
 plugins {
     kotlin("jvm") version "1.9.22"
+    kotlin("plugin.serialization") version "1.9.22"
 }
 
 group = "me.kzv"
@@ -16,7 +17,7 @@ dependencies {
 
     // spring이면 object mapper가 기본적으로 있겠지만 kotlin 은 요런 라이브러리도 있음
     // https://mvnrepository.com/artifact/org.jetbrains.kotlinx/kotlinx-serialization-json
-    runtimeOnly("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3") // 이 버전 보다 높으면 코틀린 2.0 버전 이상 써야 되는듯 - 나중에 코틀린 컴파일러 버전 올려야지
 }
 
 tasks.test {
