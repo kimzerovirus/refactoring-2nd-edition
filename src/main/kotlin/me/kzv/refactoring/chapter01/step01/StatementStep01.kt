@@ -18,9 +18,9 @@ fun statement(invoice: Invoice, plays: Map<String, Play>): String {
     ) = plays[aPerformance.playID]!!
 
     // 서적에서는 중첩 함수로 변수를 줄일 수 있다고 재시함 하지만 여기서 play, perf는 반복문을 통해 동적으로 받으므로 매개변수로 받아 준다.
-    fun amountFor(play: Play, aPerformance: Performance): Int {
+    fun amountFor(aPerformance: Performance): Int {
         var result = 0
-        when (play.type) {
+        when (playFor(aPerformance).type) {
             "tragedy" -> {
                 result = 40000
                 if (aPerformance.audience > 30) {
@@ -36,22 +36,21 @@ fun statement(invoice: Invoice, plays: Map<String, Play>): String {
                 result += 300 * aPerformance.audience
             }
 
-            else -> throw IllegalArgumentException("알 수 없는 장르: ${play.type}")
+            else -> throw IllegalArgumentException("알 수 없는 장르: ${playFor(aPerformance).type}")
         }
         return result
     }
 
     for (perf in invoice.performances) {
-        val play = playFor(perf)
-        val thisAmount = amountFor(play, perf)
+        val thisAmount = amountFor(perf)
 
         // 포인트를 적립한다.
         volumeCredits += Math.max(perf.audience - 30, 0)
         // 희극 관객 5명마다 추가 포인트를 제공한다.
-        if("comedy" == play.type) volumeCredits += perf.audience / 5 // 원본 js 코드는 Math.floor 처리
+        if("comedy" == playFor(perf).type) volumeCredits += perf.audience / 5 // 원본 js 코드는 Math.floor 처리
 
         // 청구 내역을 출력한다.
-        result += " ${play.name}: ${format.format(thisAmount / 100.0)} (${perf.audience}석)\n"
+        result += " ${playFor(perf).name}: ${format.format(thisAmount / 100.0)} (${perf.audience}석)\n"
         totalAmount += thisAmount
     }
 
