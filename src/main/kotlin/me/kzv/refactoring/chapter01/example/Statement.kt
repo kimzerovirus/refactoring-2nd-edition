@@ -1,4 +1,4 @@
-package me.kzv.refactoring.chapter01.origin
+package me.kzv.refactoring.chapter01.example
 
 import me.kzv.refactoring.chapter01.Invoice
 import me.kzv.refactoring.chapter01.Play
