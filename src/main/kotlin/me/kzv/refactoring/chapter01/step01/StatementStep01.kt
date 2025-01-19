@@ -8,6 +8,15 @@ import java.util.*
  * step01 - 1.4 statement 함수 쪼개기
  *
  * - 저자는 임시 변수가 자신이 속한 루틴에서만 의미가 있어서 루틴이 길고 복잡해지기 쉬워 나중에 문제를 일으킬 수 있으므로 제거하는게 좋다고 제시하였다. // 동일한 값을 얻기 위해 반복적으로 함수를 실행하는 경우가 있는데 임시 변수를 제거하는게 꼭 좋은거 같지는 않아 보인다.
+ * - volumeCredits >>> 반복문 쪼개기를 하며 저자는 이 정도의 중복으로 인해 미치는 성능 저하는 미미하므로 괜찮다고 제시, 물론 모든 경우에 적용되는 것은 아니므로 프로그래머 상황에 따라 판단해야 함
+ *      >>> 저자는 성능 보다는 우선적으로 코드를 잘 다듬는게 더 중요하다 생각하는듯, 이를 통해 결과적으로 얻은 코드는 성능적으로 더 우수한 경우가 많았다고 함,
+ *          >>> 저자의 조언은 "특별한 경우가 아니라면 일단 성능을 무시하고 리팩터링을 진행하자" 그 후 성능이 크게 덜어졌다면 성능 개선 작업을 진행하자고 함
+ *
+ * <volumeCredits 변수를 제거하는 작업의 단계>
+ * 1. 반복문 쪼개기로 변수 값을 누적시키는 부분을 분리
+ * 2. 문장 슬라이드하기로 변수 초기화 문장을 변수 값 누적 코드 바로 앞으로 옮기기
+ * 3. 함수 추출하기로 적립 포인트 계산 부분을 별도 함수로 추출
+ * 4. 변수 인라인하기로 volumeCredits 변수 제거
  */
 fun statement(invoice: Invoice, plays: Map<String, Play>): String {
     var totalAmount = 0
@@ -19,7 +28,6 @@ fun statement(invoice: Invoice, plays: Map<String, Play>): String {
         aPerformance: Performance // 명확한 이름으로 변경, 코드 스타일 중 매개변수의 역할이 뚜렷하지 않을 때는 부정관사를 붙여주는 방법도 있다. - 마땅한 이름을 짓기 애매해 고민을 오랫동안 할바에는 나쁘지 않은듯
     ) = plays[aPerformance.playID]!!
 
-    // 서적에서는 중첩 함수로 변수를 줄일 수 있다고 재시함 하지만 여기서 play, perf는 반복문을 통해 동적으로 받으므로 매개변수로 받아 준다.
     fun amountFor(aPerformance: Performance): Int {
         var result = 0
         when (playFor(aPerformance).type) {
