@@ -14,3 +14,7 @@ data class Play(
     val name: String,
     val type: String
 )
+
+fun main() {
+
+}
