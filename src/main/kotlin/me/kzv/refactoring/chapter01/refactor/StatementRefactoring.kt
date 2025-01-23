@@ -21,10 +21,11 @@ import java.util.*
  * - step01은 프로그램의 논리적인 요소를 파악하기 쉽도록 복잡한 덩어리를 잘게 쪼개 코드 구조를 보강하는데 주안점을 뒀다면, step02는 기능 단위??
  */
 fun statement(invoice: Invoice, plays: Map<String, Play>): String {
-    return renderPlainText(invoice, plays)
+    val statementData = Invoice(invoice.customer, invoice.performances)
+    return renderPlainText(statementData, plays)
 }
 
-fun renderPlainText(invoice: Invoice, plays: Map<String, Play>): String {
+fun renderPlainText(data: Invoice, plays: Map<String, Play>): String {
     //=== 중첩 함수 시작 ===//
     fun usd(aNumber: Int): String = NumberFormat.getCurrencyInstance(Locale.US).format(aNumber / 100.0)
 
@@ -66,7 +67,7 @@ fun renderPlainText(invoice: Invoice, plays: Map<String, Play>): String {
 
     fun totalAmount(): Int {
         var result = 0
-        for (perf in invoice.performances) {
+        for (perf in data.performances) {
             result += amountFor(perf)
         }
         return result
@@ -74,15 +75,15 @@ fun renderPlainText(invoice: Invoice, plays: Map<String, Play>): String {
 
     fun totalVolumeCredits(): Int {
         var volumeCredits = 0
-        for (perf in invoice.performances) {
+        for (perf in data.performances) {
             volumeCredits += volumeCreditsFor(perf)
         }
         return volumeCredits
     }
     //=== 중첩 함수 끝 ===//
 
-    var result = "청구 내역 (고객명: ${invoice.customer})\n"
-    for (perf in invoice.performances) {
+    var result = "청구 내역 (고객명: ${data.customer})\n"
+    for (perf in data.performances) {
         // 청구 내역을 출력한다.
         result += " ${playFor(perf).name}: ${usd(amountFor(perf))} (${perf.audience}석)\n"
     }
